@@ -5,6 +5,10 @@ using SDG.Unturned;
 
 using UnityEngine;
 
+using Steamworks;
+
+using ChubbyQuokka.DayZ.Structures;
+
 namespace ChubbyQuokka.DayZ.Managers
 {
     internal static class EventManager
@@ -23,12 +27,18 @@ namespace ChubbyQuokka.DayZ.Managers
 
         static void OnPlayerRevive(UnturnedPlayer player, Vector3 position, byte angle)
         {
-
+            foreach (PlayerItemCategory category in DayZConfiguration.ItemSpawns)
+            {
+                ItemManager.GiveCategoryToPlayer(player, category);
+            }
         }
 
-        static void OnPlayerDeath(UnturnedPlayer player, EDeathCause cause, ELimb limb, Steamworks.CSteamID murderer)
+        static void OnPlayerDeath(UnturnedPlayer player, EDeathCause cause, ELimb limb, CSteamID murderer)
         {
-
+            foreach (PlayerItemCategory category in DayZConfiguration.ItemDrops)
+            {
+                ItemManager.GiveCategoryToPlayer(player, category);
+            }
         }
     }
 }

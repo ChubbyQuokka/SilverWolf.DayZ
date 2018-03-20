@@ -10,6 +10,9 @@ namespace ChubbyQuokka.DayZ.Structures
         [XmlAttribute]
         public byte MaxAmt;
 
+        [XmlAttribute]
+        public bool Unique;
+
         [XmlElement("ItemID")]
         public PlayerItem[] Items;
     }

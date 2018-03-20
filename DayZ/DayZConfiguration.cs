@@ -24,6 +24,7 @@ namespace ChubbyQuokka.DayZ
                 {
                     MinAmt = 1,
                     MaxAmt = 1,
+                    Unique = true,
                     Items = new PlayerItem[]
                     {
                         new PlayerItem{ ItemID = 154, Weight = 1},
@@ -40,6 +41,7 @@ namespace ChubbyQuokka.DayZ
                 {
                     MinAmt = 1,
                     MaxAmt = 1,
+                    Unique = true,
                     Items = new PlayerItem[]
                     {
                         new PlayerItem{ ItemID = 2, Weight = 1}
@@ -49,6 +51,7 @@ namespace ChubbyQuokka.DayZ
                 {
                     MinAmt = 1,
                     MaxAmt = 2,
+                    Unique = false,
                     Items = new PlayerItem[]
                     {
                         new PlayerItem{ ItemID = 84, Weight = 5},
@@ -60,19 +63,21 @@ namespace ChubbyQuokka.DayZ
                 {
                     MinAmt = 1,
                     MaxAmt = 2,
+                    Unique = false,
                     Items = new PlayerItem[]
                     {
                         new PlayerItem{ ItemID = 14, Weight = 1}
                     }
                 }
             };
-        
+
             itemDrops = new PlayerItemCategory[]
             {
                 new PlayerItemCategory
                 {
                     MinAmt = 0,
                     MaxAmt = 2,
+                    Unique = true,
                     Items = new PlayerItem[]
                     {
                         new PlayerItem { ItemID = 10, Weight = 1}
@@ -82,6 +87,7 @@ namespace ChubbyQuokka.DayZ
                 {
                     MinAmt = 0,
                     MaxAmt = 2,
+                    Unique = true,
                     Items = new PlayerItem[]
                     {
                         new PlayerItem { ItemID = 11, Weight = 1}
