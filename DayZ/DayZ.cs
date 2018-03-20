@@ -1,4 +1,7 @@
-﻿using Rocket.Core.Plugins;
+﻿using System;
+
+using Rocket.Core.Plugins;
+using RocketLogger = Rocket.Core.Logging.Logger;
 
 using ChubbyQuokka.DayZ.Managers;
 
@@ -13,6 +16,8 @@ namespace ChubbyQuokka.DayZ
             Instance = this;
 
             EventManager.Initialize();
+
+            RocketLogger.Log(string.Format("The Project South Zagoria plugin v{0} has initialized!", Assembly.GetName().Version), ConsoleColor.Yellow);
         }
 
         protected override void Unload()
