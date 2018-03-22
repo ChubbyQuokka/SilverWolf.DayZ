@@ -15,6 +15,7 @@ namespace ChubbyQuokka.DayZ
         {
             Instance = this;
 
+            ThreadManager.Initialize();
             EventManager.Initialize();
 
             RocketLogger.Log(string.Format("The Project South Zagoria plugin v{0} has initialized!", Assembly.GetName().Version), ConsoleColor.Yellow);
@@ -23,8 +24,26 @@ namespace ChubbyQuokka.DayZ
         protected override void Unload()
         {
             EventManager.Destroy();
+            ThreadManager.Destroy();
 
             Instance = null;
+        }
+
+        internal static void Log(string message, ConsoleColor color = ConsoleColor.Yellow)
+        {
+            Action action = () =>
+            {
+                RocketLogger.Log(message, color);
+            };
+
+            if (ThreadManager.IsWorkerThread)
+            {
+                ThreadManager.ExecuteMain(action);
+            }
+            else
+            {
+                action.Invoke();
+            }
         }
     }
 }

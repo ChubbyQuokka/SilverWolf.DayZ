@@ -25,4 +25,14 @@ namespace ChubbyQuokka.DayZ.Structures
         [XmlText]
         public byte ItemID;
     }
+
+    public sealed class DatabaseSettings
+    {
+        public string Database;
+        public string Username;
+        public string Password;
+        public string Address;
+        public ushort Port;
+        public string TableName;
+    }
 }

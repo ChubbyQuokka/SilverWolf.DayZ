@@ -8,6 +8,10 @@ namespace ChubbyQuokka.DayZ
 {
     public sealed class DayZConfiguration : IRocketPluginConfiguration
     {
+        [XmlElement("DatabaseSettings")]
+        public DatabaseSettings databaseSettings;
+        public static DatabaseSettings DatabaseSettings => DayZ.Instance.Configuration.Instance.databaseSettings;
+
         [XmlArray("ItemDrops"), XmlArrayItem("Category")]
         public PlayerItemCategory[] itemDrops;
         public static PlayerItemCategory[] ItemDrops => DayZ.Instance.Configuration.Instance.itemDrops;
@@ -18,6 +22,16 @@ namespace ChubbyQuokka.DayZ
 
         public void LoadDefaults()
         {
+            databaseSettings = new DatabaseSettings
+            {
+                Address = "127.0.0.1",
+                Database = "unturned",
+                Password = "toor",
+                Username = "root",
+                Port = 3306,
+                TableName = "dayz_humanity"
+            };
+
             itemSpawns = new PlayerItemCategory[]
             {
                 new PlayerItemCategory
