@@ -65,6 +65,10 @@
       <HintPath>libs\Rocket.Unturned.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="0Harmony">
+      <HintPath>Libraries\0Harmony.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
@@ -111,14 +115,20 @@
     <Content Include="Libraries\System.Runtime.Serialization.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Libraries\0Harmony.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DayZ\DayZ.cs" />
     <Compile Include="DayZ\DayZConfiguration.cs" />
     <Compile Include="DayZ\Managers\EventManager.cs" />
     <Compile Include="DayZ\Managers\MySQLManager.cs" />
+    <Compile Include="DayZ\Managers\PatchingManager.cs" />
     <Compile Include="DayZ\Managers\ThreadManager.cs" />
+    <Compile Include="DayZ\Patching\UseableConsumablePatch.cs" />
     <Compile Include="DayZ\Structures\ConfigStructures.cs" />
+    <Compile Include="DayZ\Utils\ReflectionUtil.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DayZ\Managers\ItemManager.cs" />
   </ItemGroup>

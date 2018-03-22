@@ -17,12 +17,14 @@ namespace ChubbyQuokka.DayZ
 
             ThreadManager.Initialize();
             EventManager.Initialize();
+            PatchingManager.Initialize();
 
             RocketLogger.Log(string.Format("The Project South Zagoria plugin v{0} has initialized!", Assembly.GetName().Version), ConsoleColor.Yellow);
         }
 
         protected override void Unload()
         {
+            PatchingManager.Destroy();
             EventManager.Destroy();
             ThreadManager.Destroy();
 
