@@ -16,6 +16,7 @@ namespace ChubbyQuokka.DayZ
             Instance = this;
 
             ThreadManager.Initialize();
+            MySQLManager.Initialize();
             EventManager.Initialize();
             PatchingManager.Initialize();
 
@@ -26,6 +27,7 @@ namespace ChubbyQuokka.DayZ
         {
             PatchingManager.Destroy();
             EventManager.Destroy();
+            MySQLManager.Destroy();
             ThreadManager.Destroy();
 
             Instance = null;

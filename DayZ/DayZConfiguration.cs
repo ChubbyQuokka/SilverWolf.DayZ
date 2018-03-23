@@ -12,6 +12,10 @@ namespace ChubbyQuokka.DayZ
         public DatabaseSettings databaseSettings;
         public static DatabaseSettings DatabaseSettings => DayZ.Instance.Configuration.Instance.databaseSettings;
 
+        [XmlElement("HumanitySettings")]
+        public HumanitySettings humanitySettings;
+        public static HumanitySettings HumanitySettings => DayZ.Instance.Configuration.Instance.humanitySettings;
+
         [XmlArray("ItemDrops"), XmlArrayItem("Category")]
         public PlayerItemCategory[] itemDrops;
         public static PlayerItemCategory[] ItemDrops => DayZ.Instance.Configuration.Instance.itemDrops;
@@ -32,6 +36,22 @@ namespace ChubbyQuokka.DayZ
                 TableName = "dayz_humanity"
             };
 
+            humanitySettings = new HumanitySettings
+            {
+                HumanityEffectID = 12500,
+                DefaultHumanity = 100,
+                HumanityOnKill = -100,
+                HumanityResetOnDeath = true,
+                HumanityUse = new HumanityItem[]
+                {
+                    new HumanityItem{ ItemID = 514, Humanity = -50 }
+                },
+                HumanityAid = new HumanityItem[]
+                {
+                    new HumanityItem{ ItemID = 14, Humanity = 25 }
+                }
+            };
+
             itemSpawns = new PlayerItemCategory[]
             {
                 new PlayerItemCategory
@@ -41,14 +61,14 @@ namespace ChubbyQuokka.DayZ
                     Unique = true,
                     Items = new PlayerItem[]
                     {
-                        new PlayerItem{ ItemID = 154, Weight = 1},
-                        new PlayerItem{ ItemID = 158, Weight = 1},
-                        new PlayerItem{ ItemID = 163, Weight = 1},
-                        new PlayerItem{ ItemID = 167, Weight = 1},
-                        new PlayerItem{ ItemID = 171, Weight = 1},
-                        new PlayerItem{ ItemID = 175, Weight = 1},
-                        new PlayerItem{ ItemID = 179, Weight = 1},
-                        new PlayerItem{ ItemID = 183, Weight = 1}
+                        new PlayerItem{ ItemID = 154, Weight = 1 },
+                        new PlayerItem{ ItemID = 158, Weight = 1 },
+                        new PlayerItem{ ItemID = 163, Weight = 1 },
+                        new PlayerItem{ ItemID = 167, Weight = 1 },
+                        new PlayerItem{ ItemID = 171, Weight = 1 },
+                        new PlayerItem{ ItemID = 175, Weight = 1 },
+                        new PlayerItem{ ItemID = 179, Weight = 1 },
+                        new PlayerItem{ ItemID = 183, Weight = 1 }
                     }
                 },
                 new PlayerItemCategory
@@ -58,7 +78,7 @@ namespace ChubbyQuokka.DayZ
                     Unique = true,
                     Items = new PlayerItem[]
                     {
-                        new PlayerItem{ ItemID = 2, Weight = 1}
+                        new PlayerItem{ ItemID = 2, Weight = 1 }
                     }
                 },
                 new PlayerItemCategory
@@ -68,9 +88,9 @@ namespace ChubbyQuokka.DayZ
                     Unique = false,
                     Items = new PlayerItem[]
                     {
-                        new PlayerItem{ ItemID = 84, Weight = 5},
-                        new PlayerItem{ ItemID = 85, Weight = 2},
-                        new PlayerItem{ ItemID = 86, Weight = 1}
+                        new PlayerItem{ ItemID = 84, Weight = 5 },
+                        new PlayerItem{ ItemID = 85, Weight = 2 },
+                        new PlayerItem{ ItemID = 86, Weight = 1 }
                     }
                 },
                 new PlayerItemCategory
@@ -80,7 +100,7 @@ namespace ChubbyQuokka.DayZ
                     Unique = false,
                     Items = new PlayerItem[]
                     {
-                        new PlayerItem{ ItemID = 14, Weight = 1}
+                        new PlayerItem{ ItemID = 14, Weight = 1 }
                     }
                 }
             };
@@ -94,7 +114,7 @@ namespace ChubbyQuokka.DayZ
                     Unique = true,
                     Items = new PlayerItem[]
                     {
-                        new PlayerItem { ItemID = 10, Weight = 1}
+                        new PlayerItem { ItemID = 10, Weight = 1 }
                     }
                 },
                 new PlayerItemCategory
@@ -104,7 +124,7 @@ namespace ChubbyQuokka.DayZ
                     Unique = true,
                     Items = new PlayerItem[]
                     {
-                        new PlayerItem { ItemID = 11, Weight = 1}
+                        new PlayerItem { ItemID = 11, Weight = 1 }
                     }
                 },
             };

@@ -123,11 +123,13 @@
     <Compile Include="DayZ\DayZ.cs" />
     <Compile Include="DayZ\DayZConfiguration.cs" />
     <Compile Include="DayZ\Managers\EventManager.cs" />
+    <Compile Include="DayZ\Managers\HumanityManager.cs" />
     <Compile Include="DayZ\Managers\MySQLManager.cs" />
     <Compile Include="DayZ\Managers\PatchingManager.cs" />
     <Compile Include="DayZ\Managers\ThreadManager.cs" />
-    <Compile Include="DayZ\Patching\UseableConsumablePatch.cs" />
+    <Compile Include="DayZ\Patching\UseableConsumablePatches.cs" />
     <Compile Include="DayZ\Structures\ConfigStructures.cs" />
+    <Compile Include="DayZ\Structures\MySQLStructures.cs" />
     <Compile Include="DayZ\Utils\ReflectionUtil.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DayZ\Managers\ItemManager.cs" />
