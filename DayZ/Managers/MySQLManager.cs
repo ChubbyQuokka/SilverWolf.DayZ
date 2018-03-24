@@ -144,7 +144,7 @@ namespace ChubbyQuokka.DayZ.Managers
         {
             public static string Connection => $"SERVER={Settings.Address};DATABASE={Settings.Database};UID={Settings.Username};PASSWORD={Settings.Password};PORT={Settings.Port};";
 
-            public static string CreateTable => $"CREATE TABLE `{Settings.TableName}` (`csteamid` BIGINT NOT NULL UNIQUE, `name` VARCHAR(64) NOT NULL, `humanity` INTEGER NOT NULL, PRIMARY KEY (`steamid`))";
+            public static string CreateTable => $"CREATE TABLE `{Settings.TableName}` (`csteamid` BIGINT NOT NULL UNIQUE, `name` VARCHAR(64) NOT NULL, `humanity` INTEGER NOT NULL, PRIMARY KEY (`csteamid`))";
 
             public static string ShowTables => $"SHOW TABLES LIKE '{Settings.TableName}'";
 

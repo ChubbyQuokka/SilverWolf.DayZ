@@ -19,18 +19,37 @@ namespace ChubbyQuokka.DayZ
             MySQLManager.Initialize();
             EventManager.Initialize();
             PatchingManager.Initialize();
+            HumanityManager.Initialize();
+            
+            InvokeRepeating("Cache", 10f, 10f);
 
             RocketLogger.Log(string.Format("The Project South Zagoria plugin v{0} has initialized!", Assembly.GetName().Version), ConsoleColor.Yellow);
         }
 
         protected override void Unload()
         {
+            CancelInvoke("Cache");
+
+            HumanityManager.Destroy();
             PatchingManager.Destroy();
             EventManager.Destroy();
             MySQLManager.Destroy();
             ThreadManager.Destroy();
 
             Instance = null;
+        }
+
+        private void Update()
+        {
+            ThreadManager.Update();
+        }
+
+        void Cache()
+        {
+            ThreadManager.ExecuteWorker(() =>
+            {
+                HumanityManager.Refresh();
+            });
         }
 
         internal static void Log(string message, ConsoleColor color = ConsoleColor.Yellow)

@@ -1,4 +1,5 @@
-﻿using Rocket.Unturned.Events;
+﻿using Rocket.Unturned;
+using Rocket.Unturned.Events;
 using Rocket.Unturned.Player;
 
 using SDG.Unturned;
@@ -17,12 +18,21 @@ namespace ChubbyQuokka.DayZ.Managers
         {
             UnturnedPlayerEvents.OnPlayerRevive += OnPlayerRevive;
             UnturnedPlayerEvents.OnPlayerDeath += OnPlayerDeath;
+
+            U.Events.OnPlayerConnected += OnPlayerConnected;
         }
 
         public static void Destroy()
         {
             UnturnedPlayerEvents.OnPlayerRevive -= OnPlayerRevive;
             UnturnedPlayerEvents.OnPlayerDeath -= OnPlayerDeath;
+
+            U.Events.OnPlayerConnected -= OnPlayerConnected;
+        }
+
+        static void OnPlayerConnected(UnturnedPlayer player)
+        {
+            HumanityManager.CheckPlayerJoin(player);
         }
 
         static void OnPlayerRevive(UnturnedPlayer player, Vector3 position, byte angle)

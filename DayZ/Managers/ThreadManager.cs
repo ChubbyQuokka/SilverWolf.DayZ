@@ -69,7 +69,7 @@ namespace ChubbyQuokka.DayZ.Managers
         {
             while (RunThreads)
             {
-                Thread.Sleep(50);
+                Thread.Sleep(20);
 
                 lock (ThreadedLock)
                 {
