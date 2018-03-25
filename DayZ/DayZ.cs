@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections;
 
 using Rocket.Core.Plugins;
 using RocketLogger = Rocket.Core.Logging.Logger;
 
 using ChubbyQuokka.DayZ.Managers;
+using UnityEngine;
 
 namespace ChubbyQuokka.DayZ
 {

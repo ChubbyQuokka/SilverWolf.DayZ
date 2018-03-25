@@ -17,7 +17,6 @@ namespace ChubbyQuokka.DayZ.Managers
             if (Instance == null)
             {
                 Instance = HarmonyInstance.Create("net.chubbyquokka.SilverWolf.DayZ");
-
                 Instance.PatchAll(Assembly.GetExecutingAssembly());
             }
         }

@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+
 using ChubbyQuokka.DayZ.Structures;
+
 using Rocket.Unturned.Player;
+
 using SDG.Unturned;
+
 using Steamworks;
 
 namespace ChubbyQuokka.DayZ.Managers
@@ -12,6 +15,7 @@ namespace ChubbyQuokka.DayZ.Managers
     internal static class HumanityManager
     {
         static List<PlayerHumanity> players = new List<PlayerHumanity>();
+        static object playerLock = new object();
 
         public static void Initialize()
         {
@@ -27,18 +31,21 @@ namespace ChubbyQuokka.DayZ.Managers
         {
             List<PlayerHumanity> newPlayers = MySQLManager.Refresh();
 
-            foreach (SteamPlayer client in Provider.clients)
+            lock (playerLock)
             {
-                PlayerHumanity newHumanity = newPlayers.FirstOrDefault(x => x.SteamID == client.playerID.steamID.m_SteamID);
-                PlayerHumanity playerHumanity = players.FirstOrDefault(x => x.SteamID == client.playerID.steamID.m_SteamID);
-
-                if (newHumanity.Humanity != playerHumanity.Humanity)
+                foreach (SteamPlayer client in Provider.clients)
                 {
-                    SendNewUI(client.playerID.steamID, newHumanity.Humanity);
-                }
-            }
+                    PlayerHumanity newHumanity = newPlayers.FirstOrDefault(x => x.SteamID == client.playerID.steamID.m_SteamID);
+                    PlayerHumanity playerHumanity = players.FirstOrDefault(x => x.SteamID == client.playerID.steamID.m_SteamID);
 
-            players = newPlayers;
+                    if (newHumanity.Humanity != playerHumanity.Humanity)
+                    {
+                        SendNewUI(client.playerID.steamID, newHumanity.Humanity);
+                    }
+                }
+
+                players = newPlayers;
+            }
         }
 
         //CALLED ON EITHER
@@ -48,11 +55,16 @@ namespace ChubbyQuokka.DayZ.Managers
             {
                 ThreadManager.ExecuteWorker(() =>
                 {
-                    int current = players.First(x => x.SteamID == steamId).Humanity;
+                    lock (playerLock)
+                    {
+                        PlayerHumanity current = players.FirstOrDefault(x => x.SteamID == steamId);
+                        
+                        current.Humanity += humanityIncrement;
 
-                    current += humanityIncrement;
+                        MySQLManager.SetPlayerHumanity(steamId, current.Humanity);
 
-                    SendNewUI(new CSteamID(steamId), humanityIncrement);
+                        SendNewUI(new CSteamID(steamId), current.Humanity);
+                    }
                 });
             }
         }
@@ -62,15 +74,21 @@ namespace ChubbyQuokka.DayZ.Managers
         {
             ThreadManager.ExecuteWorker(() =>
             {
-                MySQLManager.InsertFirstTimePlayer(steamId, name);
-                players.Add(new PlayerHumanity { SteamID = steamId, Name = name, Humanity = DayZConfiguration.HumanitySettings.DefaultHumanity });
+                lock (playerLock)
+                {
+                    MySQLManager.InsertFirstTimePlayer(steamId, name);
+                    players.Add(new PlayerHumanity { SteamID = steamId, Name = name, Humanity = DayZConfiguration.HumanitySettings.DefaultHumanity });
+                }
             });
         }
 
         //CALLED ON WORKER THREAD
         public static bool PlayerExists(ulong steamId)
         {
-            return players.FirstOrDefault(x => x.SteamID == steamId) != null;
+            lock (playerLock)
+            {
+                return players.FirstOrDefault(x => x.SteamID == steamId) != null;
+            }
         }
 
         //CALLED ON EITHER
@@ -82,6 +100,14 @@ namespace ChubbyQuokka.DayZ.Managers
             });
         }
 
+        public static int GetPlayerHumanity(ulong id)
+        {
+            lock (playerLock)
+            {
+                return players.FirstOrDefault(x => x.SteamID == id)?.Humanity ?? DayZConfiguration.HumanitySettings.DefaultHumanity;
+            }
+        }
+
         public static void CheckPlayerJoin(UnturnedPlayer p)
         {
             CSteamID id = p.CSteamID;
@@ -89,21 +115,30 @@ namespace ChubbyQuokka.DayZ.Managers
 
             ThreadManager.ExecuteWorker(() => 
             {
-                if (!PlayerExists(id.m_SteamID))
+                lock (playerLock)
                 {
-                    AddPlayerFirstTime(id.m_SteamID, name);
+                    if (!PlayerExists(id.m_SteamID))
+                    {
+                        AddPlayerFirstTime(id.m_SteamID, name);
+                    }
+
+                    //It shouldn't be possible for the First query to return a null object, but just in case. :D
+                    PlayerHumanity humanity = players.First(x => x.SteamID == id.m_SteamID)
+                        ?? new PlayerHumanity
+                        {
+                            Name = p.DisplayName,
+                            SteamID = id.m_SteamID,
+                            Humanity = DayZConfiguration.HumanitySettings.DefaultHumanity
+                        };
+
+                    if (!humanity.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        humanity.Name = name;
+                        MySQLManager.SetPlayerName(id.m_SteamID, name);
+                    }
+
+                    SendNewUI(id, humanity.Humanity);
                 }
-
-                //It shouldn't be possible for the First query to return a null object, but just in case. :D
-                PlayerHumanity humanity = players.First(x => x.SteamID == id.m_SteamID) ?? default(PlayerHumanity);
-
-                if (!humanity.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase))
-                {
-                    humanity.Name = name;
-                    MySQLManager.SetPlayerName(id.m_SteamID, name);
-                }
-
-                SendNewUI(id, humanity.Humanity);
             });
         }
     }

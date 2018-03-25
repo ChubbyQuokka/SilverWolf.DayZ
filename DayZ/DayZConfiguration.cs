@@ -16,13 +16,9 @@ namespace ChubbyQuokka.DayZ
         public HumanitySettings humanitySettings;
         public static HumanitySettings HumanitySettings => DayZ.Instance.Configuration.Instance.humanitySettings;
 
-        [XmlArray("ItemDrops"), XmlArrayItem("Category")]
-        public PlayerItemCategory[] itemDrops;
-        public static PlayerItemCategory[] ItemDrops => DayZ.Instance.Configuration.Instance.itemDrops;
-
-        [XmlArray("ItemSpawns"), XmlArrayItem("Category")]
-        public PlayerItemCategory[] itemSpawns;
-        public static PlayerItemCategory[] ItemSpawns => DayZ.Instance.Configuration.Instance.itemSpawns;
+        [XmlElement("ItemSettings")]
+        public ItemSettings itemSettings;
+        public static ItemSettings ItemSettings => DayZ.Instance.Configuration.Instance.itemSettings;
 
         public void LoadDefaults()
         {
@@ -40,8 +36,16 @@ namespace ChubbyQuokka.DayZ
             {
                 HumanityEffectID = 12500,
                 DefaultHumanity = 100,
-                HumanityOnKill = -100,
                 HumanityResetOnDeath = true,
+                HumanityOnZombieKill = 10,
+                HumanityOnMegaKill = 250,
+                KillConditionals = new PlayerKillConditional[]
+                {
+                    new PlayerKillConditional{ Humanity = -50, RangeMin = 0, RangeMax = 250 },
+                    new PlayerKillConditional{ Humanity = 50, RangeMin = -251, RangeMax = -1 },
+                    new PlayerKillConditional{ Humanity = -100, RangeMin = 251, RangeMax = int.MaxValue },
+                    new PlayerKillConditional{ Humanity = 100, RangeMin = int.MinValue, RangeMax = -252 }
+                },
                 HumanityUse = new HumanityItem[]
                 {
                     new HumanityItem{ ItemID = 514, Humanity = -50 }
@@ -51,82 +55,99 @@ namespace ChubbyQuokka.DayZ
                     new HumanityItem{ ItemID = 14, Humanity = 25 }
                 }
             };
-
-            itemSpawns = new PlayerItemCategory[]
+            itemSettings = new ItemSettings
             {
-                new PlayerItemCategory
+                ItemUseResults = new PlayerItemResult[]
                 {
-                    MinAmt = 1,
-                    MaxAmt = 1,
-                    Unique = true,
-                    Items = new PlayerItem[]
+                    new PlayerItemResult { ItemID = 72, OriginalItem = 13}
+                },
+                ItemSpawns = new PlayerItemCategory[]
+                {
+                    new PlayerItemCategory
                     {
-                        new PlayerItem{ ItemID = 154, Weight = 1 },
-                        new PlayerItem{ ItemID = 158, Weight = 1 },
-                        new PlayerItem{ ItemID = 163, Weight = 1 },
-                        new PlayerItem{ ItemID = 167, Weight = 1 },
-                        new PlayerItem{ ItemID = 171, Weight = 1 },
-                        new PlayerItem{ ItemID = 175, Weight = 1 },
-                        new PlayerItem{ ItemID = 179, Weight = 1 },
-                        new PlayerItem{ ItemID = 183, Weight = 1 }
+                        MinAmt = 1,
+                        MaxAmt = 1,
+                        Unique = true,
+                        MaxHumanity = int.MaxValue,
+                        MinHumanity = int.MinValue,
+                        Items = new PlayerItem[]
+                        {
+                            new PlayerItem{ ItemID = 154, Weight = 1 },
+                            new PlayerItem{ ItemID = 158, Weight = 1 },
+                            new PlayerItem{ ItemID = 163, Weight = 1 },
+                            new PlayerItem{ ItemID = 167, Weight = 1 },
+                            new PlayerItem{ ItemID = 171, Weight = 1 },
+                            new PlayerItem{ ItemID = 175, Weight = 1 },
+                            new PlayerItem{ ItemID = 179, Weight = 1 },
+                            new PlayerItem{ ItemID = 183, Weight = 1 }
+                        }
+                    },
+                    new PlayerItemCategory
+                    {
+                        MinAmt = 1,
+                        MaxAmt = 1,
+                        Unique = true,
+                        MaxHumanity = int.MaxValue,
+                        MinHumanity = int.MinValue,
+                        Items = new PlayerItem[]
+                        {
+                            new PlayerItem{ ItemID = 2, Weight = 1 }
+                        }
+                    },
+                    new PlayerItemCategory
+                    {
+                        MinAmt = 1,
+                        MaxAmt = 2,
+                        Unique = false,
+                        MaxHumanity = int.MaxValue,
+                        MinHumanity = int.MinValue,
+                        Items = new PlayerItem[]
+                        {
+                            new PlayerItem{ ItemID = 84, Weight = 5 },
+                            new PlayerItem{ ItemID = 85, Weight = 2 },
+                            new PlayerItem{ ItemID = 86, Weight = 1 }
+                        }
+                    },
+                    new PlayerItemCategory
+                    {
+                        MinAmt = 1,
+                        MaxAmt = 2,
+                        Unique = false,
+                        MaxHumanity = int.MaxValue,
+                        MinHumanity = int.MinValue,
+                        Items = new PlayerItem[]
+                        {
+                            new PlayerItem{ ItemID = 14, Weight = 1 }
+                        }
                     }
                 },
-                new PlayerItemCategory
+                ItemDrops = new PlayerItemCategory[]
                 {
-                    MinAmt = 1,
-                    MaxAmt = 1,
-                    Unique = true,
-                    Items = new PlayerItem[]
+                    new PlayerItemCategory
                     {
-                        new PlayerItem{ ItemID = 2, Weight = 1 }
-                    }
-                },
-                new PlayerItemCategory
-                {
-                    MinAmt = 1,
-                    MaxAmt = 2,
-                    Unique = false,
-                    Items = new PlayerItem[]
+                        MinAmt = 0,
+                        MaxAmt = 2,
+                        Unique = true,
+                        MaxHumanity = int.MaxValue,
+                        MinHumanity = int.MinValue,
+                        Items = new PlayerItem[]
+                        {
+                            new PlayerItem { ItemID = 10, Weight = 1 }
+                        }
+                    },
+                    new PlayerItemCategory
                     {
-                        new PlayerItem{ ItemID = 84, Weight = 5 },
-                        new PlayerItem{ ItemID = 85, Weight = 2 },
-                        new PlayerItem{ ItemID = 86, Weight = 1 }
-                    }
-                },
-                new PlayerItemCategory
-                {
-                    MinAmt = 1,
-                    MaxAmt = 2,
-                    Unique = false,
-                    Items = new PlayerItem[]
-                    {
-                        new PlayerItem{ ItemID = 14, Weight = 1 }
+                        MinAmt = 0,
+                        MaxAmt = 2,
+                        Unique = true,
+                        MaxHumanity = int.MaxValue,
+                        MinHumanity = int.MinValue,
+                        Items = new PlayerItem[]
+                        {
+                            new PlayerItem { ItemID = 11, Weight = 1 }
+                        }
                     }
                 }
-            };
-
-            itemDrops = new PlayerItemCategory[]
-            {
-                new PlayerItemCategory
-                {
-                    MinAmt = 0,
-                    MaxAmt = 2,
-                    Unique = true,
-                    Items = new PlayerItem[]
-                    {
-                        new PlayerItem { ItemID = 10, Weight = 1 }
-                    }
-                },
-                new PlayerItemCategory
-                {
-                    MinAmt = 0,
-                    MaxAmt = 2,
-                    Unique = true,
-                    Items = new PlayerItem[]
-                    {
-                        new PlayerItem { ItemID = 11, Weight = 1 }
-                    }
-                },
             };
         }
     }

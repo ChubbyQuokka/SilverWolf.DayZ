@@ -1,4 +1,7 @@
-﻿using Rocket.Unturned;
+﻿using System.Linq;
+using System.Collections.Generic;
+
+using Rocket.Unturned;
 using Rocket.Unturned.Events;
 using Rocket.Unturned.Player;
 
@@ -18,6 +21,7 @@ namespace ChubbyQuokka.DayZ.Managers
         {
             UnturnedPlayerEvents.OnPlayerRevive += OnPlayerRevive;
             UnturnedPlayerEvents.OnPlayerDeath += OnPlayerDeath;
+            UnturnedPlayerEvents.OnPlayerUpdateStat += OnPlayerUpdateStat;
 
             U.Events.OnPlayerConnected += OnPlayerConnected;
         }
@@ -26,8 +30,21 @@ namespace ChubbyQuokka.DayZ.Managers
         {
             UnturnedPlayerEvents.OnPlayerRevive -= OnPlayerRevive;
             UnturnedPlayerEvents.OnPlayerDeath -= OnPlayerDeath;
+            UnturnedPlayerEvents.OnPlayerUpdateStat -= OnPlayerUpdateStat;
 
             U.Events.OnPlayerConnected -= OnPlayerConnected;
+        }
+
+        static void OnPlayerUpdateStat(UnturnedPlayer player, EPlayerStat stat)
+        {
+            if (stat == EPlayerStat.KILLS_ZOMBIES_NORMAL)
+            {
+                HumanityManager.IncrementHumanity(player.CSteamID.m_SteamID, DayZConfiguration.HumanitySettings.HumanityOnZombieKill);
+            }
+            else if (stat == EPlayerStat.KILLS_ZOMBIES_MEGA)
+            {
+                HumanityManager.IncrementHumanity(player.CSteamID.m_SteamID, DayZConfiguration.HumanitySettings.HumanityOnMegaKill);
+            }
         }
 
         static void OnPlayerConnected(UnturnedPlayer player)
@@ -37,7 +54,11 @@ namespace ChubbyQuokka.DayZ.Managers
 
         static void OnPlayerRevive(UnturnedPlayer player, Vector3 position, byte angle)
         {
-            foreach (PlayerItemCategory category in DayZConfiguration.ItemSpawns)
+            int humanity = HumanityManager.GetPlayerHumanity(player.CSteamID.m_SteamID);
+
+            List<PlayerItemCategory> categories = DayZConfiguration.ItemSettings.ItemSpawns.Where(x => x.MaxHumanity >= humanity && x.MinHumanity <= humanity).ToList();
+
+            foreach (PlayerItemCategory category in categories)
             {
                 ItemManager.GiveCategoryToPlayer(player, category);
             }
@@ -45,7 +66,18 @@ namespace ChubbyQuokka.DayZ.Managers
 
         static void OnPlayerDeath(UnturnedPlayer player, EDeathCause cause, ELimb limb, CSteamID murderer)
         {
-            foreach (PlayerItemCategory category in DayZConfiguration.ItemDrops)
+            if (murderer != CSteamID.Nil)
+            {
+                int murdererHumanity = HumanityManager.GetPlayerHumanity(murderer.m_SteamID);
+
+                PlayerKillConditional kill = DayZConfiguration.HumanitySettings.KillConditionals.FirstOrDefault(x => x.RangeMax >= murdererHumanity && x.RangeMin <= murdererHumanity);
+            }
+
+            int humanity = HumanityManager.GetPlayerHumanity(player.CSteamID.m_SteamID);
+
+            List<PlayerItemCategory> categories = DayZConfiguration.ItemSettings.ItemDrops.Where(x => x.MaxHumanity >= humanity && x.MinHumanity <= humanity).ToList();
+
+            foreach (PlayerItemCategory category in categories)
             {
                 ItemManager.GiveCategoryToPlayer(player, category);
             }

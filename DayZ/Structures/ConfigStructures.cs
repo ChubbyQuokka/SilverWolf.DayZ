@@ -2,28 +2,35 @@
 
 namespace ChubbyQuokka.DayZ.Structures
 {
-    public sealed class PlayerItemCategory
+    public sealed class ItemSettings
     {
-        [XmlAttribute]
-        public byte MinAmt;
+        [XmlArrayItem("Category"), XmlElement("ItemID")]
+        public PlayerItemResult[] ItemUseResults;
 
-        [XmlAttribute]
-        public byte MaxAmt;
+        [XmlArrayItem("Category")]
+        public PlayerItemCategory[] ItemDrops;
 
-        [XmlAttribute]
-        public bool Unique;
-
-        [XmlElement("ItemID")]
-        public PlayerItem[] Items;
+        [XmlArrayItem("Category")]
+        public PlayerItemCategory[] ItemSpawns;
     }
 
-    public sealed class PlayerItem
+    public sealed class HumanitySettings
     {
-        [XmlAttribute]
-        public ulong Weight;
+        public ushort HumanityEffectID;
+        public int DefaultHumanity;
+        public bool HumanityResetOnDeath;
 
-        [XmlText]
-        public byte ItemID;
+        public int HumanityOnZombieKill;
+        public int HumanityOnMegaKill;
+
+        [XmlArrayItem("Humanity")]
+        public PlayerKillConditional[] KillConditionals;
+
+        [XmlArrayItem("ItemID")]
+        public HumanityItem[] HumanityUse;
+
+        [XmlArrayItem("ItemID")]
+        public HumanityItem[] HumanityAid;
     }
 
     public sealed class DatabaseSettings
@@ -36,18 +43,55 @@ namespace ChubbyQuokka.DayZ.Structures
         public string TableName;
     }
 
-    public sealed class HumanitySettings
+    public sealed class PlayerItemResult
     {
-        public ushort HumanityEffectID;
-        public int DefaultHumanity;
-        public bool HumanityResetOnDeath;
-        public int HumanityOnKill;
+        [XmlAttribute]
+        public ushort OriginalItem;
 
-        [XmlArrayItem("ItemID")]
-        public HumanityItem[] HumanityUse;
+        [XmlText]
+        public ushort ItemID;
+    }
 
-        [XmlArrayItem("ItemID")]
-        public HumanityItem[] HumanityAid;
+    public sealed class PlayerKillConditional
+    {
+        [XmlText]
+        public int Humanity;
+
+        [XmlAttribute]
+        public int RangeMin;
+
+        [XmlAttribute]
+        public int RangeMax;
+    }
+
+    public sealed class PlayerItemCategory
+    {
+        [XmlAttribute]
+        public byte MinAmt;
+
+        [XmlAttribute]
+        public byte MaxAmt;
+
+        [XmlAttribute]
+        public bool Unique;
+
+        [XmlAttribute]
+        public int MinHumanity;
+
+        [XmlAttribute]
+        public int MaxHumanity;
+
+        [XmlElement("ItemID")]
+        public PlayerItem[] Items;
+    }
+
+    public sealed class PlayerItem
+    {
+        [XmlAttribute]
+        public ulong Weight;
+
+        [XmlText]
+        public byte ItemID;
     }
 
     public sealed class HumanityItem

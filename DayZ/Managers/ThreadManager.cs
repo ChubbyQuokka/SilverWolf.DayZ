@@ -15,7 +15,7 @@ namespace ChubbyQuokka.DayZ.Managers
         static object MainLock = new object();
 
         static Thread WorkerThread;
-        static bool RunThreads = false;
+        static volatile bool RunThreads = false;
 
         public static bool IsWorkerThread => Thread.CurrentThread.ManagedThreadId == WorkerThread.ManagedThreadId;
 
@@ -98,6 +98,14 @@ namespace ChubbyQuokka.DayZ.Managers
             else
             {
                 action.Invoke();
+            }
+        }
+
+        public static void EnqueueMain(Action action)
+        {
+            lock (MainLock)
+            {
+                MainBuffer.Enqueue(action);
             }
         }
 
