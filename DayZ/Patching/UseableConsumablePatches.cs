@@ -10,6 +10,9 @@ using Harmony;
 
 using SDG.Unturned;
 
+using UnityEngine;
+using Random = UnityEngine.Random;
+
 namespace ChubbyQuokka.DayZ.Patching
 {
     [HarmonyPatch(typeof(UseableConsumeable))]
@@ -36,6 +39,14 @@ namespace ChubbyQuokka.DayZ.Patching
 
                     HumanityItem item = default(HumanityItem);
                     PlayerItemResult result = DayZConfiguration.ItemSettings.ItemUseResults.FirstOrDefault(x => x.OriginalItem == asset.id);
+
+                    float random = Random.Range(0f, 1f);
+                    float chance = Mathf.Clamp(result.Chance, 0f, 1f);
+
+                    if (random > chance)
+                    {
+                        result = null;
+                    }
 
                     if (mode == EConsumeMode.USE)
                     {

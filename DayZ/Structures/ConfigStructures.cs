@@ -48,6 +48,9 @@ namespace ChubbyQuokka.DayZ.Structures
         [XmlAttribute]
         public ushort OriginalItem;
 
+        [XmlAttribute]
+        public float Chance;
+
         [XmlText]
         public ushort ItemID;
     }

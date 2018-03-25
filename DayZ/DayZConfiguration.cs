@@ -59,7 +59,7 @@ namespace ChubbyQuokka.DayZ
             {
                 ItemUseResults = new PlayerItemResult[]
                 {
-                    new PlayerItemResult { ItemID = 72, OriginalItem = 13}
+                    new PlayerItemResult { ItemID = 72, OriginalItem = 13, Chance = 1f }
                 },
                 ItemSpawns = new PlayerItemCategory[]
                 {
