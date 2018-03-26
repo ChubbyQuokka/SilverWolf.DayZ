@@ -5,4 +5,4 @@
 [assembly: AssemblyProduct("SilverWolf.DayZ")]
 [assembly: AssemblyCopyright("(c) ChubbyQuokka 2018")]
 
-[assembly: AssemblyVersion("1.1.1.0")]
+[assembly: AssemblyVersion("1.1.2.0")]

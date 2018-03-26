@@ -66,16 +66,19 @@ namespace ChubbyQuokka.DayZ.Managers
 
         static void OnPlayerDeath(UnturnedPlayer player, EDeathCause cause, ELimb limb, CSteamID murderer)
         {
+            int playerHumanity = HumanityManager.GetPlayerHumanity(player.CSteamID.m_SteamID);
+
             if (murderer != CSteamID.Nil)
             {
-                int murdererHumanity = HumanityManager.GetPlayerHumanity(murderer.m_SteamID);
+                PlayerKillConditional kill = DayZConfiguration.HumanitySettings.KillConditionals.FirstOrDefault(x => x.RangeMax >= playerHumanity && x.RangeMin <= playerHumanity);
 
-                PlayerKillConditional kill = DayZConfiguration.HumanitySettings.KillConditionals.FirstOrDefault(x => x.RangeMax >= murdererHumanity && x.RangeMin <= murdererHumanity);
+                if (kill != null)
+                {
+                    HumanityManager.IncrementHumanity(murderer.m_SteamID, kill.Humanity);
+                }
             }
 
-            int humanity = HumanityManager.GetPlayerHumanity(player.CSteamID.m_SteamID);
-
-            List<PlayerItemCategory> categories = DayZConfiguration.ItemSettings.ItemDrops.Where(x => x.MaxHumanity >= humanity && x.MinHumanity <= humanity).ToList();
+            List<PlayerItemCategory> categories = DayZConfiguration.ItemSettings.ItemDrops.Where(x => x.MaxHumanity >= playerHumanity && x.MinHumanity <= playerHumanity).ToList();
 
             foreach (PlayerItemCategory category in categories)
             {
